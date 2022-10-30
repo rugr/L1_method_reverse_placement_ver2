@@ -734,7 +734,7 @@
                 <Font name="System Bold" size="14.0" />
             </font>
         </Label>
-        <Button layoutX="409.0" layoutY="11.0" mnemonicParsing="false" onAction="#calculate" text="Зробити розрахунок" textFill="#07941a">
+        <Button layoutX="402.0" layoutY="53.0" mnemonicParsing="false" onAction="#calculate" text="Зробити розрахунок" textFill="#07941a">
             <font>
                 <Font name="System Bold" size="18.0" />
             </font>
@@ -1255,5 +1255,52 @@
                 <Font size="14.0" />
             </font>
         </Label>
+      <VBox layoutX="405.0" layoutY="617.0" spacing="10.0">
+         <children>
+            <HBox alignment="CENTER_LEFT" spacing="20.0">
+               <children>
+                  <Label text="Кпоч. = ">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelKBegin">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" spacing="20.0">
+               <children>
+                  <Label text="Ккін. = ">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelKEnd">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_LEFT" layoutX="10.0" layoutY="10.0" spacing="20.0">
+               <children>
+                  <Label text="Е = ">
+                     <font>
+                        <Font name="System Bold" size="18.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="labelEfficiency">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <Label layoutX="229.0" text="* Якщо Вам потрібно розрахувати інший варіан - можна змінити відстані, порядок та кількість зв'язків." />
     </children>
 </AnchorPane>

@@ -1,15 +1,20 @@
 package sample;
 
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 public class Controller {
     @FXML
     AnchorPane anchorPaneRoot;
+
+    @FXML
+    Label labelKBegin, labelKEnd, labelEfficiency;
 
     @FXML
     GridPane gridPaneDistance;
@@ -35,6 +40,16 @@ public class Controller {
     GridPane gridPaneSumNumberConnections;
 
     private Map<String, TextField> mapTextFieldSumNumberConnections = new HashMap<>();
+
+    @FXML
+    GridPane gridPaneMultiply;
+
+    private Map<String, TextField> mapTextFieldMultiply = new HashMap<>();
+
+    @FXML
+    GridPane gridPaneMultiplyEnd;
+
+    private Map<String, TextField> mapTextFieldMultiplyEnd = new HashMap<>();
 
     @FXML
     TextField
@@ -64,6 +79,8 @@ public class Controller {
         setMapTextFieldSumDistances();
         setMapSumNumberConnections();
         setMapTextFieldOrderElementsEnd();
+        setMapTextFieldMultiply();
+        setMapTextFieldMultiplyEnd();
     }
 
     @FXML
@@ -79,6 +96,34 @@ public class Controller {
         setListStringByTextField(listOrderElementsEnd,
                 element_end_1, element_end_2, element_end_3, element_end_4, element_end_5);
         setDistancesBetweenElements(listOrderElementsEnd, listDistancesBetweenElements, mapTextFieldsDistanceEnd, "s_end_");
+        setMultiplyDistanceByNumberConnections(mapTextFieldsDistance, mapTextFieldNumberConnections,
+                mapTextFieldMultiply, "s_", "k_", "m_");
+        setMultiplyDistanceByNumberConnections(mapTextFieldsDistanceEnd, mapTextFieldNumberConnections,
+                mapTextFieldMultiplyEnd, "s_end_", "k_", "m_end_");
+        calculateEfficiency();
+    }
+
+    private void calculateEfficiency() {
+        Integer sumMultiply = mapTextFieldMultiply.entrySet().stream()
+                .mapToInt(value -> getInt(value.getValue().getText()))
+                .sum();
+
+        BigDecimal kBegin = new BigDecimal(sumMultiply.toString())
+                .divide(new BigDecimal("2")).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+        Integer sumMultiplyEnd = mapTextFieldMultiplyEnd.entrySet().stream()
+                .mapToInt(value -> getInt(value.getValue().getText()))
+                .sum();
+
+        BigDecimal kEnd = new BigDecimal(sumMultiplyEnd.toString())
+                .divide(new BigDecimal("2")).setScale(2, BigDecimal.ROUND_HALF_UP);
+
+        BigDecimal efficiency = kBegin.subtract(kEnd)
+                .divide(kBegin, 10, BigDecimal.ROUND_HALF_UP)
+                .multiply(new BigDecimal(100)).setScale(2, BigDecimal.ROUND_HALF_UP);
+        labelKBegin.setText(kBegin.toString());
+        labelKEnd.setText(kEnd.toString());
+        labelEfficiency.setText(efficiency.toString() + " %");
     }
 
     private void setMapTextFieldDistances() {
@@ -101,6 +146,16 @@ public class Controller {
     private void setMapSumNumberConnections() {
         gridPaneSumNumberConnections.getChildren().forEach(node ->
                 mapTextFieldSumNumberConnections.put(node.getId(), (TextField) node));
+    }
+
+    private void setMapTextFieldMultiply() {
+        gridPaneMultiply.getChildren().forEach(node ->
+                mapTextFieldMultiply.put(node.getId(), (TextField) node));
+    }
+
+    private void setMapTextFieldMultiplyEnd() {
+        gridPaneMultiplyEnd.getChildren().forEach(node ->
+                mapTextFieldMultiplyEnd.put(node.getId(), (TextField) node));
     }
 
     private void setMapTextFieldOrderElementsEnd() {
@@ -187,6 +242,22 @@ public class Controller {
             }
         }
         return placeNumber;
+    }
+
+    private void setMultiplyDistanceByNumberConnections(Map<String, TextField> mapTextFieldDistance,
+                                                        Map<String, TextField> mapTextFieldNumberConnections,
+                                                        Map<String, TextField> mapTextFieldMultiply,
+                                                        String prefixKeyDistance, String prefixKeyNumberConnections,
+                                                        String prefixKeyMultiply) {
+        for (int iRow = 1; iRow < 6; iRow++) {
+            for (int iColumn = 1; iColumn < 6; iColumn++) {
+                int intDistance = getInt(mapTextFieldDistance.get(prefixKeyDistance + iRow + "_" + iColumn).getText());
+                int intNumberConnection = getInt(mapTextFieldNumberConnections
+                        .get(prefixKeyNumberConnections + iRow + "_" + iColumn).getText());
+                int resultMultiply = intDistance * intNumberConnection;
+                mapTextFieldMultiply.get(prefixKeyMultiply + iRow + "_" + iColumn).setText(Integer.toString(resultMultiply));
+            }
+        }
     }
 
     private int getInt(String s) {
